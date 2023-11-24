@@ -3,6 +3,11 @@ const Book = require("../models/book");
 
 const router = new express.Router();
 
+const jsonschema = require('jsonschema');
+//PEER Is there a convention on how to name 3rd party libraries versus regular source code variables? 
+const createBookSchema = require ('../schemas/createBookSchema.json')
+
+const ExpressError = require('../expressError.js')
 
 /** GET / => {books: [book, ...]}  */
 
@@ -30,6 +35,13 @@ router.get("/:id", async function (req, res, next) {
 
 router.post("/", async function (req, res, next) {
   try {
+    const validationResult = jsonschema.validate(req.body,createBookSchema);
+   
+    if (!validationResult.valid) {
+      const listOfErrors = validationResult.errors.map(error => error.stack);
+      const error = new ExpressError(listOfErrors,400);
+      return next(error);
+    }
     const book = await Book.create(req.body);
     return res.status(201).json({ book });
   } catch (err) {
