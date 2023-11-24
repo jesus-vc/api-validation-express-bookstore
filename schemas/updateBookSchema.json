@@ -5,7 +5,6 @@
     "default": {},
     "title": "Root Schema",
     "required": [
-        "isbn",
         "amazon_url",
         "author",
         "language",
@@ -15,14 +14,6 @@
         "year"
     ],
     "properties": {
-        "isbn": {
-            "type": "string",
-            "default": "",
-            "title": "The isbn Schema",
-            "examples": [
-                "0-545-01022-5"
-            ]
-        },
         "amazon_url": {
             "type": "string",
             "default": "",
@@ -81,7 +72,6 @@
         }
     },
     "examples": [{
-        "isbn": "0-545-01022-5",
         "amazon_url": "https://www.amazon.com/gp/product/B0BPNP7YQB/",
         "author": "James McBride",
         "language": "English",

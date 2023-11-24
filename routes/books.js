@@ -6,6 +6,7 @@ const router = new express.Router();
 const jsonschema = require('jsonschema');
 //PEER Is there a convention on how to name 3rd party libraries versus regular source code variables? 
 const createBookSchema = require ('../schemas/createBookSchema.json')
+const updateBookSchema = require ('../schemas/updateBookSchema.json')
 
 const ExpressError = require('../expressError.js')
 
@@ -24,6 +25,16 @@ router.get("/", async function (req, res, next) {
 
 router.get("/:id", async function (req, res, next) {
   try {
+
+     // Validate isbn input includes only numbers and hyphens.
+
+     const isbnPattern = /^[\d-]+$/;
+    
+     if (!isbnPattern.test(req.params.isbn)) {
+       return next({status: 400,
+       message: "Your isbn input should include only numbers and hyphens."});
+     }
+     
     const book = await Book.findOne(req.params.id);
     return res.json({ book });
   } catch (err) {
@@ -53,6 +64,24 @@ router.post("/", async function (req, res, next) {
 
 router.put("/:isbn", async function (req, res, next) {
   try {
+
+    // Validate isbn input includes only numbers and hyphens.
+
+    const isbnPattern = /^[\d-]+$/;
+    
+    if (!isbnPattern.test(req.params.isbn)) {
+      return next({status: 400,
+      message: "Your isbn input should include only numbers and hyphens."});
+    }
+
+    const validationResult = jsonschema.validate(req.body,updateBookSchema);
+   
+    if (!validationResult.valid) {
+      const listOfErrors = validationResult.errors.map(error => error.stack);
+      const error = new ExpressError(listOfErrors,400);
+      return next(error);
+    }
+
     const book = await Book.update(req.params.isbn, req.body);
     return res.json({ book });
   } catch (err) {
