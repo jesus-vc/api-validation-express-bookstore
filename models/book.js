@@ -1,6 +1,5 @@
 const db = require("../db");
 
-
 /** Collection of related methods for books. */
 
 class Book {
