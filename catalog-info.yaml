@@ -1,0 +1,9 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: api-validation-express-bookstore
+  annotations:
+    github.com/project-slug: jesus-vc/api-validation-express-bookstore
+spec:
+  type: other
+  lifecycle: unknown
